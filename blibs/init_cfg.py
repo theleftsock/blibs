@@ -8,7 +8,7 @@ import argparse
 
 pp = pprint.PrettyPrinter(indent=4)
 def get_command_line_options():
-    print "get command line options"
+    print("get command line options")
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--fullreg')
     parser.add_argument('-l', '--local')
@@ -54,13 +54,13 @@ def merge_two_dicts(x, y):
     return z
 
 def single_level_config_merge(global_cfg_obj, local_cfg_obj):
-    for outer_key in global_cfg_obj.keys():
-        print "outer_key: ", outer_key
+    for outer_key in list(global_cfg_obj.keys()):
+        print("outer_key: ", outer_key)
         if (outer_key in local_cfg_obj):
             try:
-                for inner_layer_key in local_cfg_obj[outer_key].keys(): # .keys fails if it's not a dict of dicts, so just copy our local configuration then
+                for inner_layer_key in list(local_cfg_obj[outer_key].keys()): # .keys fails if it's not a dict of dicts, so just copy our local configuration then
                     if inner_layer_key not in global_cfg_obj[outer_key]:
-                        print "inner layer key %s not found in main config, but i'm going to add it" % (inner_layer_key)
+                        print("inner layer key %s not found in main config, but i'm going to add it" % (inner_layer_key))
                     global_cfg_obj[outer_key][inner_layer_key] = local_cfg_obj[outer_key][inner_layer_key]
             except AttributeError: # attibute error should come up because its not a dict of dicts, it's a list, so just copy it
                 if local_cfg_obj[outer_key] is not None:
@@ -69,12 +69,12 @@ def single_level_config_merge(global_cfg_obj, local_cfg_obj):
 
 def get_all_config_files(cfg_dp = None, file_exts = ('.yml','.yaml'), global_cfg_fp = None, global_cfg_fn = None):  # get all configuration files and append the config object
     get_command_line_options()
-    print "Global Configuration File %s at %s" % (global_cfg_fn, global_cfg_fp)
+    print("Global Configuration File %s at %s" % (global_cfg_fn, global_cfg_fp))
     with open(global_cfg_fp, 'r') as ymlfile:
         try:
             global_cfg_obj = yaml.load(ymlfile)
         except:
-            print "Error attempting to load the global configuration object from the global configuration file"
+            print("Error attempting to load the global configuration object from the global configuration file")
     cwd = os.getcwd()  # get the current working directory
     global_cfg_obj["path"]["root"] = cwd  # add the root directory to the config object
     if (cfg_dp == None):
@@ -84,7 +84,7 @@ def get_all_config_files(cfg_dp = None, file_exts = ('.yml','.yaml'), global_cfg
     if len(local_cfg_fns) == 0: # no local configuration files were found, return our global object
         return global_cfg_obj
     else:
-        print "Local Configuration File(s): %s " % (local_cfg_fns)
+        print("Local Configuration File(s): %s " % (local_cfg_fns))
     for fn in local_cfg_fns: # use multiple, but probably only a single local config
         local_cfg_fp = os.path.join(cfg_dp, fn)
         # print "cfg_fp: ", cfg_fp
@@ -92,13 +92,13 @@ def get_all_config_files(cfg_dp = None, file_exts = ('.yml','.yaml'), global_cfg
             local_cfg_obj = yaml.load(ymlfile)
             final_cfg_obj = single_level_config_merge(global_cfg_obj, local_cfg_obj)
     pp.pprint(final_cfg_obj)
-    print "after dict merge"
+    print("after dict merge")
 
     return final_cfg_obj
 
 def info(msg):
     frm = inspect.stack()[1]
-    print "frm: ", frm
+    print("frm: ", frm)
     mod = inspect.getmodule(frm[0])
-    print "mod: ", pp.pprint(mod)
-    print '[%s] %s' % (mod.__name__, msg)
+    print("mod: ", pp.pprint(mod))
+    print('[%s] %s' % (mod.__name__, msg))

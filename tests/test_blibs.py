@@ -37,4 +37,6 @@ if __name__ == "__main__":
     import os 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     print(dir_path)
-    fm.get_list_dir(dir_path)
+    all_fn = fm.get_list_dir(dir_path,1)
+    for fn in all_fn:
+        print(fn)

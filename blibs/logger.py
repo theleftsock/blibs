@@ -5,7 +5,7 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 import inspect
 import ntpath
-import timestamps
+from . import timestamps
 import sys
 
 def wlog(*args, **kwargs): # takes args and kwargs so that hte function can be overloaded
@@ -19,17 +19,17 @@ def wlog(*args, **kwargs): # takes args and kwargs so that hte function can be o
             log_dir = cwd + os.sep + "log"
             frm = inspect.stack()[1]
             if (os.path.isdir(log_dir)):
-                print "log dir is real: ", log_dir
+                print("log dir is real: ", log_dir)
             else:
-                print "log dir no good: ", log_dir
+                print("log dir no good: ", log_dir)
             log_name = get_call_script_name()
             log_name += "_log.txt"
             fh = open(log_name, 'w')
-            print "log_name: ", log_name
+            print("log_name: ", log_name)
             dirs = [d for d in os.listdir(cwd) if os.path.isdir(d)]
-            print "cwd: ", cwd, "dirs: ", pp.pprint(dirs)
-        for key, value in kwargs.iteritems():
-            print "%s = %s" % (key, value)
+            print("cwd: ", cwd, "dirs: ", pp.pprint(dirs))
+        for key, value in kwargs.items():
+            print("%s = %s" % (key, value))
         if 'global_details' not in kwargs:
             global_details = 2
     else:
@@ -41,7 +41,7 @@ def wlog(*args, **kwargs): # takes args and kwargs so that hte function can be o
             #    print "x: ", x
             log_msg = ts + " - " + msg + "\n"
             fh.write(log_msg)
-            print log_msg.rstrip()
+            print(log_msg.rstrip())
             fh.flush()  # flush the file buffer
             os.fsync(fh) # sync the file buffer file, to make sure all the data is in teh file
         elif (len(args) == 3):
@@ -55,7 +55,7 @@ def wlog(*args, **kwargs): # takes args and kwargs so that hte function can be o
                 if (dlvl <= details):
                     log_msg = ts + " - " + msg + "\n"
                     fh.write(log_msg)
-                    print log_msg.rstrip() # print the log messages to the console as well
+                    print(log_msg.rstrip()) # print the log messages to the console as well
             fh.flush()
             os.fsync(fh)
         elif (len(args) == 4):
@@ -69,12 +69,12 @@ def wlog(*args, **kwargs): # takes args and kwargs so that hte function can be o
                 if (dlvl <= details):
                     log_msg = ts + " - " + msg + "\n"
                     fh.write(log_msg)
-                    print log_msg.rstrip()
+                    print(log_msg.rstrip())
             fh.flush()
             os.fsync(fh)
         else:
-            print "wrong number of arguments to logging function"
-            print "args: ", args
+            print("wrong number of arguments to logging function")
+            print("args: ", args)
 
     return 0
 
@@ -94,13 +94,13 @@ def get_call_script_name():
 def init_log(remove_log_fp):
     if (os.path.exists(remove_log_fp)):
         try:
-            print "attempting to delete log " + remove_log_fp + "\n"
+            print("attempting to delete log " + remove_log_fp + "\n")
             os.remove(remove_log_fp)
         except:
             e = sys.exc_info()[0]
-            print "failed to removed log file " + remove_log_fp + "\n"
-            print "with error: " + str(e) + "\n"
+            print("failed to removed log file " + remove_log_fp + "\n")
+            print("with error: " + str(e) + "\n")
             exit()
     else:
-        print "log file : " + remove_log_fp + " does not exist"
+        print("log file : " + remove_log_fp + " does not exist")
         return

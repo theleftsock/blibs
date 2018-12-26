@@ -5,15 +5,12 @@ import subprocess
 import ntpath
 import sys
 import re
-#import statistics as st
 import pprint
-import logger
 import shutil
-import classes
 import string
 
 def search_dir(regx, fp): # this will take the first match that it finds and returns the filepath
-    print "preparing to search for ", regx, " in ", fp
+    print("preparing to search for ", regx, " in ", fp)
     any_match = False
     all_fps = get_list_dir(fp, 3)
     # print "all_fps: ", all_fps
@@ -23,14 +20,14 @@ def search_dir(regx, fp): # this will take the first match that it finds and ret
         matcher = a.search(fp)  #search finds the regx anywhere in the line
         if matcher:
             any_match = True # any match was found
-            print "regular expression found"
+            print("regular expression found")
             yield fp
     if any_match == False:  # if any match was not found return None
-        print "regx ", regx, " not found in fp ", fp
+        print("regx ", regx, " not found in fp ", fp)
         yield None
 
 def search_dir_depth(regx, fp, search_depth): # this will take the first match that it finds and returns the filepath
-    print "preparing to search for ", regx, " in ", fp
+    print("preparing to search for ", regx, " in ", fp)
     any_match = False
     if search_depth is None:
         all_fps = get_list_dir(fp, 3)
@@ -43,10 +40,10 @@ def search_dir_depth(regx, fp, search_depth): # this will take the first match t
         matcher = a.search(fp)  #search finds the regx anywhere in the line
         if matcher:
             any_match = True # any match was found
-            print "regular expression found"
+            print("regular expression found")
             yield fp
     if any_match == False:  # if any match was not found return None
-        print "regx ", regx, " not found in fp ", fp
+        print("regx ", regx, " not found in fp ", fp)
         yield None
 
 def search_for_filename(fn, dirp, depth = -1, debug = 0):
@@ -63,10 +60,10 @@ def get_list_dir(fp, mode, depth = -1, debug = 0):  #takes a file path, a mode f
     ret_val = []
     loc_depth = 0
     if (debug == 1):
-        print "get_list_dir fp: ", fp
+        print("get_list_dir fp: ", fp)
     for (dirpath, dirnames, filenames) in os.walk(fp, topdown=True):
         if (debug == 1):
-            print "dirpath: ", dirpath, "dirnames: ", dirnames, "filenames: ", filenames
+            print("dirpath: ", dirpath, "dirnames: ", dirnames, "filenames: ", filenames)
         if (mode == 1):
             ret_val.extend(filenames)
         if (mode == 2):
@@ -74,8 +71,8 @@ def get_list_dir(fp, mode, depth = -1, debug = 0):  #takes a file path, a mode f
         if (mode == 3):
             for fn in filenames:
                 if (debug == 1):
-                    print "fn: ", fn
-                    print "fp: ", fp
+                    print("fn: ", fn)
+                    print("fp: ", fp)
                 fp = dirpath + os.sep + fn
                 ret_val.append(fp)
         if (mode == 4):
@@ -84,7 +81,7 @@ def get_list_dir(fp, mode, depth = -1, debug = 0):  #takes a file path, a mode f
                 ret_val.append(dirp)
         loc_depth += 1  #i'm not sure this works quite the way I think it does, but it's fine for depth 1, this will iterate over several folders if there are more folders there
         if (debug == 1):
-            print "loc_depth: ", loc_depth  # need to fix the depth argument
+            print("loc_depth: ", loc_depth)  # need to fix the depth argument
         if (loc_depth >= depth) & (depth != -1):
             break
     return ret_val
@@ -92,26 +89,26 @@ def get_list_dir(fp, mode, depth = -1, debug = 0):  #takes a file path, a mode f
 def is_file(fp, details=50):
     if (os.path.isfile(fp)):
         if (details > 10):
-            print "file is file and exists: ", fp
+            print("file is file and exists: ", fp)
         return 1
     else:
         if (details > 10):
-            print "filepath is not file:", fp
+            print("filepath is not file:", fp)
         return 0
 
 def is_dir(dirp, details=50):
     if os.path.exists(dirp):
         if (details > 10 ):
-            print "dirp exists: ", dirp
+            print("dirp exists: ", dirp)
         return 1
     else:
         if (details > 10):
-            print "dirp not exist: ", dirp
+            print("dirp not exist: ", dirp)
         return 0
 
 def check_create_dir(dirp, details = 50):
     if (details > 5):
-        print "preparing to check create dirp: ", dirp
+        print("preparing to check create dirp: ", dirp)
     if os.path.exists(dirp) & os.path.isdir(dirp):
         return
     else:
@@ -124,7 +121,7 @@ def remove_whitespace(string, mode=0):
     if re.match(r'^\s*$', string):
         return ""
     if (mode == 0):  # leading trailing
-        print "mode 0 for remove the white space"
+        print("mode 0 for remove the white space")
         new_string = string.strip()  #should remove leading and trailing whitespace
     elif (mode == 1):  # remove all whitespace from a line \s \t \n
         new_string = "".join(string.split())
@@ -138,7 +135,7 @@ class csv_file_info():
 def file_line_count(fp):  #convenience for getting the total number of file lines
     i = 0
     if (is_file(fp, 0) == 0):
-        print "Error with object sent to file_line_count: ", sys.exc_info()[0]
+        print("Error with object sent to file_line_count: ", sys.exc_info()[0])
         return
 
     else:
@@ -239,10 +236,10 @@ def remove_all_in_path(path):
         return
     for each in all_in_path:
         try:
-            print("Trying to remove: ",each)
+            print(("Trying to remove: ",each))
             shutil.rmtree(os.path.join(path,each))
         except Exception as e:
-            print("Unable to remove ",each,e)
+            print(("Unable to remove ",each,e))
 
 def gen_column_letters():
     alphabet = list(string.ascii_lowercase)
