@@ -1,15 +1,14 @@
 ﻿
 import os
-import inspect
-import subprocess
-import ntpath
-import sys
 import re
 import pprint
 import shutil
 import string
 
-def search_dir(regx, fp): # this will take the first match that it finds and returns the filepath
+def search_dir(regx, fp): 
+    """
+    infinite search depth searches a specified file path and yields the matching filepath matching the regular expression supplied
+    """
     print("preparing to search for ", regx, " in ", fp)
     any_match = False
     all_fps = get_list_dir(fp, 3)
@@ -27,6 +26,9 @@ def search_dir(regx, fp): # this will take the first match that it finds and ret
         yield None
 
 def search_dir_depth(regx, fp, search_depth): # this will take the first match that it finds and returns the filepath
+    """
+    searches a specified file path and yields the matching filepath matching the regular expression supplied
+    """
     print("preparing to search for ", regx, " in ", fp)
     any_match = False
     if search_depth is None:
